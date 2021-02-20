@@ -1,15 +1,22 @@
 import random
+import enum
+
+class difficulty(enum.Enum):
+    Easy = 18
+    Medium = 27
+    Hard = 36
 
 
 class Board:
 
-    def __init__(self):
-        self.height = 10#Height of board
-        self.width = 10#width of Board
+    def __init__(self, h, w, diff):
+        self.height = h#Height of board
+        self.width = w#width of Board
         self.board = self.gen_board()#Variable denoting whole board
-        self.mine_number = 18#Number of Mines on a given Board
+        self.mine_number = diff#Number of Mines on a given Board
         self.mine_locations = []#List of Tuples consisting of mine locations
         self.selected = []#list of areas the have been selected
+        self.gen_mines()
     def gen_board(self):
         board = []
         for i in range(self.height):
@@ -21,14 +28,16 @@ class Board:
         for i in range (self.mine_number):
             rand_col = random.randint(0, self.width-1)
             rand_row = random.randint(0, self.height-1)
-            self.mine_locations.append((rand_col, rand_row))
+            if((rand_col, rand_row) not in self.mine_locations):
+                self.mine_locations.append((rand_col, rand_row))
             self.board[rand_col][rand_row] = 'X'
 
     def display(self):
         for rows in self.board:
             print(rows)
     def is_mine(self, x, y):
-        return self.board[x][y] == 'X'
+        #return self.board[x][y] == 'X'
+        return (x,y) in self.mine_locations
     def count_surrounding(self, x,y ):
         mines_around = 0
         for i in range(3):
@@ -54,15 +63,16 @@ class Board:
         #print(type(x),type(y))
         print(self.count_surrounding(int(x),int(y)))
     def show_mine_loc(self):
+        print("mines")
         for mines in self.mine_locations:
             print(mines)
 
 
 
-b = Board()
-b.gen_mines()
-b.display()
-b.show_mine_loc()
+#b = Board(10,10,difficulty.Easy.value)
+#b.gen_mines()
+#b.display()
+#b.show_mine_loc()
 
 #b.set_all_points()
 
